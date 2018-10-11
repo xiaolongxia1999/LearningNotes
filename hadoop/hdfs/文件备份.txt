@@ -1,0 +1,3 @@
+http://blog.chinaunix.net/uid-25691489-id-5176714.html
+
+一个简单的例子：hdfs dfs -setrep -R 2 /DataOfPowerPlantOrigin/hive/	亲测有效，执行后，会修改备份数值，很快（应该是修改namenode上文件的元数据信息），再在命令结束后，hdfs后台自动修改备份（复制或删除，集群内部网络传输）。

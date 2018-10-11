@@ -1,0 +1,1 @@
+在artifacts里，添加extracted content或者extracted Directory

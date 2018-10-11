@@ -1,0 +1,19 @@
+都是要先取出（或强制转换成想看的stage对应的model），并强制转换（向子类转换）后，调用子类对应的方法。
+
+
+例如CrossValidator(TrainSplits类一样）
+
+先调用bestModel方法， 得到Model[_]
+
+强制转换asInstanceOf  ,  如Model[PipelineStageModel] (假定我们是对整个Pipeline优化)
+
+从PipelineStageModel中，获取stages，  得到的是Array[Transformer]
+
+从Array中取出一个Transformer，强转成对应我们要的模型，比如Array(1)是LinearRegressionModel
+
+
+强转后，得到的就是有训练过的参数的LinearRegressionModel
+
+调用LinearRegressionModel.summary,得到LinearRegressionTrainingSummary
+
+这个类就包含各种属性，参数了：

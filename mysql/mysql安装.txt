@@ -1,0 +1,11 @@
+centos7里，yum源中的mysql实际上是MYSQL分支mariaDB。
+
+
+https://www.linuxidc.com/Linux/2016-03/129396.htm
+
+基本步骤：
+yum search 源
+
+yum install mariadb的所有包
+
+启动：systemctl start mariadb

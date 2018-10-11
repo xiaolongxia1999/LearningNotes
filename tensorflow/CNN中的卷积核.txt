@@ -1,0 +1,3 @@
+https://www.cnblogs.com/hans209/p/7103168.html
+
+tf.nn.conv_2d的4个重要参数详解

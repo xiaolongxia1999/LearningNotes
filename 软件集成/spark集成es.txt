@@ -1,0 +1,64 @@
+ES的官网，有专门的ES集成spark的demo和文档：
+https://www.elastic.co/guide/en/elasticsearch/hadoop/current/spark.html
+有很多方面的功能，不光是读写
+
+
+主要包括：es集成spark RDD/SQL/Streaming
+
+https://www.jianshu.com/p/a5c669d0ceba
+
+需要三方依赖包：
+elasticsearch-spark-13_2.10
+
+
+https://blog.csdn.net/myproudcodelife/article/details/50985057
+spark连接es，从es中读取"index/type",生成一个dataframe
+有8种方式
+
+
+具体的“读取、写入”示例，见：
+E:\IdeaWorkSpace\EnergyManagement4\EnergyManagement\examples\test\scala\mydemo\sparkWithEs.scala
+亲测有效：
+
+
+
+
+
+关于spark连接远程es节点，见：https://blog.csdn.net/tangshiweibbs/article/details/70254933
+在conf中，用set，设置3个属性：
+es.index.auto.create
+es.nodes
+port
+
+
+
+spark访问es数据的几种方式，通过：
+spark RDD/Dstream
+spark SQL
+hadoopAPI 即MapReduce layer
+
+
+
+
+pyspark访问es，也是通过MapReduce的hadoop api, 即支持hadoop inputFormat方式
+
+
+
+其实，由于spark支持hadoop
+
+所以其他“数据源”都可以通过hadoop API的方式，与spark进行连接（在scala中，叫hadoopRDD）
+
+
+貌似
+SparkSesssion.read.format.options(options).load(path)
+SparkSesssion.write.format.options(options).save(path)
+
+这两个貌似可以“通用”的读取对应的“数据源”
+
+关键是：三方包中是如何集成“spark”和“数据源”的
+options（即配置参数）怎么写
+
+比如es与spark的集成最少配置是：
+val options = Map("pushdown"->"true", "es.nodes"->"172.16.32.142","es.port"->"9200")
+
+其它的数据源如mysql等同理

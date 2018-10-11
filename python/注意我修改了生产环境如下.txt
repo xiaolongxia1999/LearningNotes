@@ -1,0 +1,9 @@
+biop2中修改了软链接
+
+在/usr/bin目录下：原来是python->python2
+
+
+后来删除了上面的链接，并执行（新建python指向conda的软链接）：ln -s $ANACODNA_HOME/bin/python  /usr/bin/python.	将anaconda的python执行命令连接
+
+
+要知道linux下/usr/bin是系统环境变量。里面的命令都可以执行。

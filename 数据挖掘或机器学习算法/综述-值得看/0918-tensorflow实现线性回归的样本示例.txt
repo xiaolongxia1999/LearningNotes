@@ -1,0 +1,32 @@
+tensorflow的机器学习示例：
+	https://github.com/aymericdamien/TensorFlow-Examples
+25K的赞，仔细去看————————
+（如果可以的话，先暂时使用“多项式回归”，去拟合出一个目标函数，即获取N个关系式）
+
+
+
+
+https://github.com/pkmital/tensorflow_tutorials/blob/master/python/02_linear_regression.py
+
+
+数据y = sin(x) + ξ
+
+tensorflow模拟y的线性回归
+(自定义损失函数等，梯度下降法优化算子）
+
+
+
+另一篇：tensorflow实现多项式子拟合：
+https://github.com/pkmital/tensorflow_tutorials/blob/master/python/03_polynomial_regression.py
+
+
+实在没办法的话，直接用多项式拟合即可
+
+
+另外，可以为用户提供一个expression选项（用户自己提供一个决策变量与目标变量的拟合函数，的表达式）——————否则用我默认提供的
+
+
+一篇“英文的介绍”————机器学习的理解：
+https://www.toptal.com/machine-learning/machine-learning-theory-an-introductory-primer
+另外资料见：
+https://github.com/aymericdamien/TensorFlow-Examples/blob/master/notebooks/0_Prerequisite/ml_introduction.ipynb

@@ -1,0 +1,10 @@
+用flume导入到kafka
+
+
+使用hdfs source, kafka sink，file channel
+
+---------------------------+
+| DBS                       |
+| ROLES                     |
+| TXNS                      |
+| TYPES

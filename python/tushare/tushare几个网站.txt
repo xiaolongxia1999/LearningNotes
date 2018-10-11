@@ -1,0 +1,12 @@
+tushare
+http://tushare.org/trading.html#id2
+
+tushare pro
+https://tushare.pro/document/1?doc_id=63
+
+#各种数据接口，文档————里面有api doc，可以参照此写接口输出文档
+https://tushare.pro/document/2
+
+#相关工具：
+包括“数据采集”，让我们可以通过接口采数，存储，分析等
+https://tushare.pro/document/1?doc_id=29

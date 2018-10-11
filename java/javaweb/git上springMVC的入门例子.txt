@@ -1,0 +1,8 @@
+https://github.com/brianway/springmvc-mybatis-learning
+点赞数很多1.3k
+
+也是该作者，另一篇简单入门例子：https://github.com/brianway/spring-learning
+
+
+这一篇代码详细，使用之
+https://blog.csdn.net/vitelon/article/details/53425138

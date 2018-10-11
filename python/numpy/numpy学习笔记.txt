@@ -1,0 +1,13 @@
+https://www.numpy.org.cn/user_guide/quickstart_tutorial/linear_algebra.html
+
+中文版本
+
+numpy很好用，好好学习，把其当做matlab
+
+
+
+1.数组和矩阵，选哪一个？
+
+2.数组掩码——numpy.ma
+
+	用于处理缺失和不完整数据，对某些“无效”记录作标记，进行np的运算时，自动忽略这些无效值。

@@ -1,0 +1,10 @@
+进入github:
+此为keras项目源码，李佳璇的第7章示例就是该项目下的源代码，用的是minst_cnn.py文件
+https://github.com/keras-team/keras/blob/2.2.0/examples
+/mnist_cnn.py
+
+
+可以在notebook下测试：
+ipython notebook
+
+已经敲过一遍。

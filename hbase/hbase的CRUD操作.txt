@@ -1,0 +1,45 @@
+第三章：客户端API，增删查改。
+
+
+Put
+
+Get
+
+Delete
+
+这3个类，是专门用于增查删的，其他用于增删查改的类，都是基于他们3个的功能开始的。
+
+一般的过程是：
+
+1.先new 一个 Put(Get,Delete)对象————需要指定行键Row
+2.再对该对象进行操作，一般传递参数，指定ColumnFamily名、Qualification名——————一般用hbase的Bytes.toBytes()方法将参数转成byte[]
+
+3.在堆HTable的实例，调用方法，传入上面的对象作为参数。 ————上面的对象类似于sql语句，先把模板写好（相当于专门存储参数），此处在对表进行操作。
+
+
+注：一般这3个对象可以是对单个比如Put对象操作，即一行行操作； 也可以先装入一个列表，进行批量操作。
+
+
+
+Row类————————是上面3个类的父类！
+
+Row类可以用于批处理————批处理都是使用HTable的batch方法处理。 
+
+一般步骤：
+1.先定义一个new ArrayList<Row>（）；
+2.往这个list里，添加一堆Row的子类（Put,Get,Delete）——————注意，这些子类要是有操作的，即至少指定了行和列簇的，含具体操作的
+
+3.使用HTable的batch方法，执行批处理操作。batch返回结果，是list中每个Row的子类的操作结果，有的是操作成功，如Put,Delete,有的是返回值，比如Get..
+
+
+
+Scan类————————扫描
+ResultScanner类，迭代扫描，封装了Get的方法。
+
+步骤：
+1.新建Scan类————Scan类不用指定行，可以扫描全表，当然可以添加各种限制条件（列簇，列，时间，版本，自定义的Filter类）等，获取精确结果——————也可以获取范围结果（比如某一个行键范围内）。
+2.HTable.getScanner(Scan scan) 获取ResultScanner的实例， 再用for循环迭代操作（增删改等）
+。
+3.关闭ResultScanner的对象。
+
+当然迭代操作时，除了for循环，还有next操作， 类似于Iterator.next

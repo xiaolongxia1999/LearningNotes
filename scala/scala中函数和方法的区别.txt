@@ -1,0 +1,7 @@
+http://www.runoob.com/scala/functions-call-by-name.html
+
+简单说：
+
+方法必须传入参数
+
+函数则可以只定义值：

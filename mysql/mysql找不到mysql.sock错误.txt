@@ -1,0 +1,15 @@
+https://www.linuxidc.com/Linux/2010-06/26521.htm
+
+正确方法如上：
+
+就是
+ps -aux|grep mysql
+
+kill - 9 掉所有mysql进程，有多少全部都kill掉
+
+
+
+
+很有可能是，我之前用hive --service metastore启动了太多mysql进程的原因，
+
+后来我在mysql中使用了shutdown命令，把这个socket关闭掉了,导致mysql.sock丢失

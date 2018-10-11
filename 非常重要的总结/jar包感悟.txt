@@ -1,0 +1,14 @@
+select * from (
+	select machine,englishname,chinesename,RANK() OVER(PARTITION BY machine order by value desc) as value_rank 
+
+)e where e.value_rank < 3;
+
+select * from (select machine,englishname,chinesename,RANK() OVER(PARTITION BY machine order by value desc) as value_rank )e where e.value_rank < 3;
+
+
+
+insert overwrite table a partition(dt='2018-05-12')
+select 
+
+	from a as ta full join stage.tmp_a as tb
+	on ta.id=tb.id

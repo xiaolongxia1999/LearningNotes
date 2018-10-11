@@ -1,0 +1,18 @@
+见:https://blog.csdn.net/Amy_mm/article/details/79890979
+
+
+pipeline.setStages(  Array(A1,A2,A3) )
+
+A1,A2,A3都是指算子
+
+那么pipeline.fit(df)执行的是是什么过程呢？
+
+执行stage[0]里的fit和transform——————将生成的df1传给stage[1]
+val A1Model = A1.fit(df)
+val df1 =A1Model.transform(df)
+
+同上，执行stage[1]里的fit和transform
+val A2Model = A2.fit(df1)
+val df2 =A2Model.transform(df1)
+
+到最后一个PipelineStage时，只fit，不transform

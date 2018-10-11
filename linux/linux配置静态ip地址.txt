@@ -1,0 +1,12 @@
+https://blog.csdn.net/clevercode/article/details/50574695
+
+修改NAT8,不使用dhcp
+
+配置3个文件：
+
+
+network
+
+eth0
+
+resolve.conf

@@ -1,0 +1,29 @@
+其元数据，存储于mysql的hive数据库中。
+
+
+假设目前mysql有一个数据库hive， mysql存储数据位于/var/lib/mysql目录下：
+
+
+则hive中的元数据的信息，全部位于hive表中，如什么SDS,TBLS等等，包含了表的字段、结构、位置、输入输出格式（这些基本是由create、load操作形成，另外一些增删改查的mapreduce操作也能形成）
+
+除了这些元数据， mysql的information_schema表，还讲hive作为了外键关联，才能够进行查询。如其中的INNODB_SYS_FOREIGN
+
+
+
+所以hive的元数据，分成以上两个部分。
+
+
+实际备份时， 貌似，仅仅将/var/lib/mysql/hive/* 复制备份，是不够的。  
+
+目前不知道hive的真正备份方式。
+
+
+有一次故障恢复，恢复了部分元数据——————其实是删除了hive目录——create database hive——— create external table power_plant3t....————load data ...
+
+
+本质上，是重新建了表（因为由之前的hql脚本，知道数据的结构）————两步： 1.create表； 2.load data;——————这两步本质上，就是在mysql中建立元数据表，而已，并不是对hive的data进行操作。
+
+
+
+hive并不存储数据，真正的存储是hdfs， 所以，只要有hdfs上的数据，只要知道数据的位置， 查看数据的结构，备份还是较容易的。
+

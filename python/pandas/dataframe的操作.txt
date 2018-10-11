@@ -1,0 +1,14 @@
+字符串列分割：
+https://blog.csdn.net/claroja/article/details/64519428
+df2['src'],df2['target'] = df2.icol(0).str.split("->",1).str
+
+
+增加新的一列：
+https://www.cnblogs.com/rrttp/p/8108188.html
+df['newcolName']= A Series
+
+
+指定列名：
+df.columns=['col1','col2'...]  
+
+

@@ -1,0 +1,4 @@
+
+org.apache.spark.util.StatCounter类
+
+计算一个集合的描述性统计指标：min,max，mean等

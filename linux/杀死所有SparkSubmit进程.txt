@@ -1,0 +1,9 @@
+https://blog.csdn.net/alibert/article/details/40981117
+
+
+ps -ef|grep SparkSubmit|grep -v grep|cut -c 9-15|xargs kill -9
+
+
+
+
+cut -c 9-15是截取每行的第9-15个字符串，也就是进程号

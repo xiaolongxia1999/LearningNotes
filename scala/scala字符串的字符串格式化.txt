@@ -1,0 +1,14 @@
+例如：
+    val a = "dhhd"
+
+    val b = s"this is a: ${a}"
+    println(b)
+
+
+打印出来的：this is a: dhhd
+
+
+
+这种语法，和linux一样——————${a}   
+
+注意格式化字符串时，字符串前面要加个s ，不然无效

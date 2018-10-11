@@ -1,0 +1,29 @@
+hadoop:
+namenode:172.16.3.44和172.16.3.45（具体哪个active不定）
+
+hdfs:172.16.3.44:50070
+
+集群ip映射：
+172.16.3.44	hadoop01
+172.16.3.45	hadoop02
+172.16.3.46	hadoop03
+172.16.3.47	hadoop04
+172.16.3.48	hadoop05
+172.16.3.49	hadoop06
+
+
+yarn-webUI:172.16.3.45:23188		(300g内存，以后spark考虑yarn-client模式提交任务)
+
+hbase-webUI:hadoop02:60010
+
+
+客户端软件地址：hadoop02:/kehuduan/bonc_sy/beh/core
+使用CDH5.7.0的配套版本体系
+包括：
+Hadoop 2.6.0-cdh5.7.0
+HBase 1.2.0-cdh5.7.0
+Hive-1.1.0-cdh5.7.0
+jdk1.8.0_91
+scala2.11.8
+spark2.2.0-bin-hadoop2.6.5
+zookeeper-3.4.5-cdh5.7.0

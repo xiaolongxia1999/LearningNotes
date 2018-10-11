@@ -1,0 +1,62 @@
+核心就是使用case when then 语句。 
+见：https://www.cnblogs.com/wangshuai6707/archive/2015/07/14/4645328.html中mssql中第1种方式case when方式，亲测有效
+
+
+
+虽然case when then语句能实现sum的，但是实现average时会出错， 求平均把那些为0值的都求了。
+
+因此考虑两步生成pivot：
+
+1.先计算， 使用groupby 函数，将所有分组汇总，计算完毕。
+2.再使用case when then实现的分组（此处由于行索引和列索引对应的单元格，都是唯一的汇总值，直接SUM(CASE语句）），如下：
+
+SELECT sa.name,SUM(CASE sa.book WHEN 'C#高级编程' THEN sa.avg_s ELSE 0 END) AS c ,SUM(CASE sa.book WHEN 'java从入门到精通' THEN sa.avg_s ELSE 0 END) AS java FROM  (SELECT NAME,book,AVG(saledNumber) AS avg_s FROM s GROUP BY NAME,book) sa GROUP BY sa.name;
+
+
+解释：第一步：(SELECT NAME,book,AVG(saledNumber) AS avg_s FROM s GROUP BY NAME,book) sa————生成辅助表sa，分组汇总（此处求平均）完毕。
+
+	第二步：SELECT sa.name,SUM(CASE sa.book WHEN 'C#高级编程' THEN sa.avg_s ELSE 0 END) AS c ,SUM(CASE sa.book WHEN 'java从入门到精通' THEN sa.avg_s ELSE 0 END) AS java FROM  sa GROUP BY sa.name;————利用sa表进行数据重排，变成pivot形式。
+
+
+	 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+1、Sqlserver数据库测试
+---创建测试表
+Create table s(
+ 
+ 
+    [name] nvarchar(50),
+    book nvarchar(50),
+    saledNumber int
+)
+----插入测试数据
+insert into s ([name],book,saledNumber) values('小王','java从入门到精通',10);
+insert into s ([name],book,saledNumber)values('小李','java从入门到精通',15);
+insert into s ([name],book,saledNumber)values('小王','C#高级编程',8);
+insert into s ([name],book,saledNumber)values('小李','java从入门到精通',7);
+insert into s ([name],book,saledNumber)values('小王','java从入门到精通',9);
+insert into s ([name],book,saledNumber)values('小李','java从入门到精通',2);
+insert into s ([name],book,saledNumber)values('小王','C#高级编程',3);
+insert into s ([name],book,saledNumber)values('小李','java从入门到精通',5);
+insert into s ([name],book,saledNumber)values('小李','C#高级编程',5);
+ 
+ 
+---1、通过case when 方式
+SELECT [name], sum(case  book when 'java从入门到精通' then saledNumber else 0 end) as [java从入门到精通],sum(case  book when 'C#高级编程' then saledNumber else 0 end) as [C#高级编程], sum(saledNumber) as [sum] from s group by [name]
+ 
+ 
+---2、通过pivot
+select sa.name,sa.java从入门到精通,sa.C#高级编程 ,sa.java从入门到精通+sa.C#高级编程 as 合计 from s
+ pivot(sum(saledNumber) for book in (java从入门到精通,C#高级编程)) sa

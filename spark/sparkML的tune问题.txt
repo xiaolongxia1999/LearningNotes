@@ -1,0 +1,79 @@
+tune:模型调整，模型优化。
+
+多说一句： 其实pipeline,可以看做，就是 多个“模型”的容器，有序！有依赖
+val pipeline = new Pipeline()
+  .setStages(Array(tokenizer, hashingTF, lr))
+
+
+模型优化，spark提供的两种方式：
+
+对于一个总训练集data
+
+1.CrossValidator——————data划分成K个独立互斥的子训练集对（training,test）。  每个训练集分别，按照M个参数对，进行K*M次训练，得到最优模型
+
+			优点：很稳定，有效， 缺点：太昂贵，需要很多计算资源
+
+2.Train-Validation Split——————data划分为(training, test)两个集，只划分一次，按照设置比例。然后对M个参数集合，进行训练
+
+			优点：相对没那么昂贵，训练次数会大大减少。
+
+
+通常计算一次模型只是一个初始值。
+
+
+为了调整模型参数，经常将 训练集，划分成N个子训练集， 重新用于训练N次模型。
+
+
+这个过程由于是独立的，因此可以并行执行。  官网建议，一般<=10就够了。 
+
+构建“格点搜索”法，需要用到类：ParamGridBuilder ——————用于指定不同的参数。
+
+格点搜索法的过程如下：
+
+	1.训练集data划分为M个“独立的”子训练集对data[training set,test set](i)——————这里，每个子集之间是互斥的
+
+	2.对每个（training,test）对， 通过对ParamMaps里的参数进行迭代训练。
+	
+		对每个ParamMap,拟合模型，并用Evaluator评估模型的表现
+
+		注意这个ParamMap应该是个多个参数的总集合。假设有3个模型，每个模型有2个参数，每个参数有10种值
+		那最终的参数集的个数为： 60个
+
+				
+
+		选择表现最好的那个模型。
+
+	所以这里，最终训练了60*M次模型。
+
+格点设置参数时，语法如下：每个参数都可以设置一个Array集合，表示参数的值——————所有N个参数，若都设置M个值，会形成N*M个参数搜索空间
+val paramGrid = new ParamGridBuilder()
+  .addGrid(hashingTF.numFeatures, Array(10, 100, 1000))
+  .addGrid(lr.regParam, Array(0.1, 0.01))
+  .build()
+
+
+
+一般机器学习，会把整个数据集划分成：训练集、验证集和测试集——————英文：Training set，Cross Validation set，Test set
+https://blog.csdn.net/neleuska/article/details/73193096
+
+
+
+在格点搜索之前，要定义好Pipeline,告诉spark，接下来将如何顺序进行哪几个模型（即流程图）
+
+格点搜索，使用ParamGridBuilderm的addGrid方法， 会生成多个settings
+
+val paramGrid = new ParamGridBuilder()
+  .addGrid(hashingTF.numFeatures, Array(10, 100, 1000))
+  .addGrid(lr.regParam, Array(0.1, 0.01))
+  .build()
+
+
+
+
+
+
+spark2.3中模型优化的两类方法，的例子：见http://spark.apache.org/docs/latest/ml-tuning.html
+
+CrossValidator
+
+Train-Validation Split

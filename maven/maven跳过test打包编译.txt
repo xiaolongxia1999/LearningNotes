@@ -1,0 +1,7 @@
+https://blog.csdn.net/ichsonx/article/details/49755409
+mvn install -Dmaven.test.skip=true
+
+
+编译的作用：
+
+将人编辑的代码，转成机器可识别的二进制语言。

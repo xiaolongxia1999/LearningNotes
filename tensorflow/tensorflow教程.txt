@@ -1,0 +1,10 @@
+E:\InstallPacksges\tensorflow\中文文档\tensorflow-zh-master\tensorflow-zh-master\tex_pdf\tensorflow_manual_cn.pdf
+
+还有tutorials：
+
+E:\InstallPacksges\tensorflow\中文文档\tensorflow-zh-master\tensorflow-zh-master\tex_pdf\tutorials\*
+
+
+中文文档，见github的一个中文翻译团队的地址：
+
+https://github.com/jikexueyuanwiki/tensorflow-zh

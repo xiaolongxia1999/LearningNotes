@@ -1,0 +1,18 @@
+其实就是spark和hive的环境打通，二者能够互相访问；
+
+另一方面就是——spark与hive的互相读写
+
+
+hive本身只是一张“视图”，实际存储依赖于hdfs，而表的结构在元数据库（如mysql中）
+
+spark写到hive的方式：
+
+	见：https://blog.csdn.net/Gpwner/article/details/77991362
+	调用的saveAsTable方式
+
+	见：https://blog.csdn.net/sparkexpert/article/details/50964732
+	先用spark建立临时视图表tempView，然后调用spark.sql（sql）方式，当打开hiveSupportEnabled时，spark sql应该是hql实例？？此时会得到hive的配置，并利用hive进行操作
+	该例子图示了，直接写进hive，并在hive中查看是否写入成功
+
+	见：https://blog.csdn.net/zgc625238677/article/details/53928320/
+	spark写入hive的几种方式

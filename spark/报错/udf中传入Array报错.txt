@@ -1,0 +1,6 @@
+https://blog.csdn.net/u013090676/article/details/80616425
+
+抛出异常，array不能转成 别的类型
+
+
+应该将Array[T] 转成 Seq[T]

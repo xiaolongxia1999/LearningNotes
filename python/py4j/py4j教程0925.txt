@@ -1,0 +1,28 @@
+官网地址：
+https://www.py4j.org/advanced_topics.html#implementing-java-interfaces-from-python-callback
+
+
+
+python永远是客户端，java永远是服务端
+
+
+python调用java:
+	java端提供服务，很简单
+
+java调用python（见上述官网中的3.3节，本质上是使用回调函数）:
+	java中写好接口
+	
+	python使用内部类中class Java 使用implements关键字，传入实现哪个Java类
+
+
+如何从java端启动，调用python端，见上述官网3.5
+
+
+
+注意：
+在idea中引入py4j时，import py4j.java_gateway会报红，提示找不到。
+是因为anaconda3.5中的py4j是0.10.6，已经不包含这个模块了，但兼容上面的api,即能运行
+
+而spark2.2中pyspark模块，则是有此模块的。
+
+因此，项目中最后要自己添加包，不用$ANA_CONDA/share/py4j,即自己指定py4j。就要spark版本的

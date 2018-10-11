@@ -1,0 +1,36 @@
+0.deeplearning4j/deeplearning4j————————spark的深度学习框架（很大的项目，8.8k的关注，103个分支）
+https://github.com/deeplearning4j/deeplearning4j
+
+0.1.TensorFlowOnSpark————————yahoo开源项目：基于spark的tensorflow，2.4k关注
+https://github.com/yahoo/TensorFlowOnSpark
+
+1.spark ml 算法原理剖析以及具体的源码实现分析 
+https://github.com/endymecy/spark-ml-source-analysis
+
+
+2.spark-hbase-connector——————————hbase与spark的连接库
+https://github.com/nerdammer/spark-hbase-connector
+
+
+2.5.Tencent/angel——————————腾讯关于机器学习的spark实现。3314颗星（关注）——————很值得一看。
+https://github.com/Tencent/angel
+
+
+3.high-performance-spark-examples————————高效spark
+https://github.com/high-performance-spark/high-performance-spark-examples
+
+
+4.twosigma/flint————————————spark的时间序列
+https://github.com/twosigma/flint
+
+5.igniterealtime————————————————
+https://github.com/igniterealtime/Spark
+
+
+6.xubo245/SparkLearning————————一个spark学习的博客（版本略低1.5.2的）
+https://github.com/xubo245/SparkLearning
+
+
+7.jadianes/spark-movie-lens————————网上电影推荐系统
+https://github.com/jadianes/spark-movie-lens
+

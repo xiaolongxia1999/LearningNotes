@@ -1,0 +1,15 @@
+1.scala中基础数据类型中，对应java的7种基本类型（除boolean）,之间都可以“互相转换”
+他们都有7种转换方法：比如Float.toByte/Float.toInt等等。。
+
+
+我们知道scala的Float对应于  java中的float,而不是java.lang.Float
+
+但是scala中对这7种数据类型，都定义了1个快速转换方法，即box() 装箱
+以Float为例，将Float转为java.lang.Float
+
+box方法： scala的Float转成java.lang.Float
+unbox方法：接受一个对象，将其转成scala的Float
+
+2.spark一般将接口和其具体实现类，写在同一个类里。
+
+先定义Trait，再写其实现类。传参数时，都是传接口不传实现类

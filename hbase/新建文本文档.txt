@@ -1,0 +1,23 @@
+Scan scan1 = new Scan();
+
+ResultScanner scanner1 = table.getScanner(scan1);
+
+for(Result res:scanner1){
+	sout(res);
+}
+
+scanner1.close();
+
+
+Scan scan2 = new Scan();
+scan2.addFamily(Bytes.toBytes("colfam1"));
+ResultScanner scanner2 = table.getScanner(scan2);
+for(Result res:scanner2){
+	sout(res);
+}
+
+scanner2.close();
+
+
+Scan scan3 = new Scan();
+scan3.addColumn(Bytes.toBytes("colfam2"),Bytes.toBytes()

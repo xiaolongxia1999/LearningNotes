@@ -1,0 +1,15 @@
+3种调度器：queue/capacity/fair schedular
+
+
+其中queue就是队列式的
+capacity：是n组用户共享集群资源， 给每个用户组，分配一定资源。 不多也不少。
+
+
+fair：是任务优先级高的，抢占优先级低的job的任务。  执行完了的任务，就会释放资源。
+具体见博客：https://blog.csdn.net/tonylee0329/article/details/52293576
+
+
+fair调度器方式————应该能充分利用集群资源。
+
+
+目前数汇空间，使用的是capacity方式。

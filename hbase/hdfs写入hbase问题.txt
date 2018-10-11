@@ -1,0 +1,3 @@
+linux有/home/biop/data/cl/hbase的jar包
+
+运行idea中的：hdfsToHbase类，不成功，总提示：Exception in thread "main" java.lang.NoClassDefFoundError: org/apache/hadoop/hbase/mapreduce/TableReducer

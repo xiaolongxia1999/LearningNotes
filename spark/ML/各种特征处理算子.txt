@@ -1,0 +1,51 @@
+一般都有fit和transform
+
+有的只有transform，比如VectorAssembler
+
+
+具体实现:
+
+基本都是先对输入的df，获取schema，transformSchema
+
+完后就开始具体的功能实现。
+
+比如VectorAssembler：就是选取多列，转成一列，该列是向量形式
+
+然后用自定义的udf。
+
+该udf如下：
+
+ val assembleFunc = udf { r: Row =>
+      VectorAssembler.assemble(r.toSeq: _*)
+    }
+
+实际调用的是静态方法：
+VectorAssembler.assemble(r.toSeq: _*)，代码如下：
+
+  private[feature] def assemble(vv: Any*): Vector = {
+    val indices = ArrayBuilder.make[Int]
+    val values = ArrayBuilder.make[Double]
+    var cur = 0
+    vv.foreach {
+      case v: Double =>
+        if (v != 0.0) {
+          indices += cur
+          values += v
+        }
+        cur += 1
+      case vec: Vector =>
+        vec.foreachActive { case (i, v) =>
+          if (v != 0.0) {
+            indices += cur + i
+            values += v
+          }
+        }
+        cur += vec.size
+      case null =>
+        // TODO: output Double.NaN?
+        throw new SparkException("Values to assemble cannot be null.")
+      case o =>
+        throw new SparkException(s"$o of type ${o.getClass.getName} is not supported.")
+    }
+    Vectors.sparse(cur, indices.result(), values.result()).compressed
+  }

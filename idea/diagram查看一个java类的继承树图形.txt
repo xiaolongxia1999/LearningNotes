@@ -1,0 +1,5 @@
+右键一个类——Diagram——show Diagram
+需要搜索BPM插件，开启JBoss bpm
+
+
+scala的看不了

@@ -1,0 +1,11 @@
+如果你的数据源格式是hadoop所支持的——直接用HadoopRDD/newHadoopRDD
+
+如果你的数据源格式支持JDBC————直接用JdbcRDD
+
+如果你的数据源格式很杂乱——————可以考虑，先转成json， spark支持json
+
+对于流式数据————你可以自定义流，也可以先接入flume/kafka/kenesis,再用spark streaming接入
+
+
+
+总之，一定会有中间媒介，让spark接触到任意的数据源。

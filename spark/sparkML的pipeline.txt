@@ -1,0 +1,32 @@
+pipeline是一个“spark ML”工作流——————更准确的，是一个DAG  （其实spss modeler，biop的流程图，本质上，也可以用DAG解析，并有序的执行计划，因为这些计划有依赖关系）
+
+实际上，pipeline的意义在于： 将机器学习，统一抽象为“接口”形式，方便调用（都是fit拟合和transform转换或预测阶段）————用户友好。 另外输入一般是dataframe
+
+pipeline是按照下面的2个组件划分stages，然后构成有向无环图DAG的，用于任务调度
+
+组件包括：
+	transformer————————一般是Dataframe转成另一个Dataframe，包括那种fitted model， 即带参数的模型，比如LinearRegressionModel，带transform方法
+
+	estimator——————————一般是一些参数估计啥的，用于生成一个transformer（也就是所谓训练阶段），比如LinearRegression, 带fit方法
+
+
+
+pipeline里面还有：
+
+	参数设置： params, ParamsMap
+
+	假定val lr = new LinearRegression()
+
+	则params格式为： lr.setMaxIter()
+
+	ParamsMap的格式是 ParamsMap( lr1.maxIter->10,lr2.maxIter->30,..) .  ParamsMap方便有多个模型，在设置同一参数时。
+
+
+
+另外，多个ml的模型跑的时候，可以用pipeline指定顺序——————如下：
+
+val pipeline = new Pipeline()
+  .setStages(Array(tokenizer, hashingTF, lr))
+
+
+

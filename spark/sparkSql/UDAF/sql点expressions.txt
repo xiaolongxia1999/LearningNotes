@@ -1,0 +1,51 @@
+org.apache.spark.sql.expressions里的内容：
+
+
+几个很重要的函数：
+
+@必须学会
+两类UDAF（均为抽象类）： UserDefinedFunction、Aggregation
+
+@类似于map，在functions里的udf接口传一个函数，或者用下面的类完成
+自定义函数类:UserDefinedFunction
+
+@排序、分组会很有用
+窗口函数：Window、WindowSpec
+
+Window中常用方法(9种)：
+其中6种返回WindowSpec，而WindowSpec里的方法和这6种完全相同
+
+currentRow: Long
+
+orderBy(cols: Column*): WindowSpec
+
+orderBy(colName: String, colNames: String*): WindowSpec
+
+partitionBy(cols: Column*): WindowSpec
+
+partitionBy(colName: String, colNames: String*): WindowSpec
+
+rangeBetween(start: Long, end: Long): WindowSpec
+
+rowsBetween(start: Long, end: Long): WindowSpec
+
+unboundedFollowing: Long
+
+unboundedPreceding: Long
+
+WindowSpec类只有6种方法，本质上是4种（分区、排序、选择行号between、选择行范围）
+可以结合Window.unboundedFollowing  (无上限，即最大行号）、Window.currentRow(当前行）
+
+窗口函数Window(WindowSpec)会生成一个行号列。结合functions里的row_number().over(window).desc (可以升序也可以降序），可以获取到该列Column，用select为其命名。 然后对“行号”列操作
+
+窗口的主要作用：用自带的4种方法，去“选择”某个范围内的行， 并得到行号。
+
+
+
+
+
+
+
+
+关于汇总函数Aggregator:
+

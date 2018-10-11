@@ -1,0 +1,28 @@
+搜索tensorflow:
+
+选most stars——
+https://github.com/search?o=desc&q=tensorflow&s=stars&type=Repositories
+
+前4的都可以关注：
+
+其中实用的——关于样例——除各种分类的网站，还有传统的机器学习实现
+	aymericdamien/TensorFlow-Examples
+
+一篇数据科学data-science-ipython-notebooks:基于tensorflow：
+	https://github.com/donnemartin/data-science-ipython-notebooks
+
+
+
+
+
+
+
+其它：
+tensorflow的社区，非常活跃，有100页+的项目，随便翻一个，都可能是极有意思的应用，甚至可用于直接产生价值！
+
+
+举例：
+	我随意点开的一个，就是一个“物体识别”的项目，使用了CIRFA-10
+见：https://github.com/matterport/Mask_RCNN
+说明：该项目说明里，附有图片
+	项目里含有源码——————见https://github.com/matterport/Mask_RCNN/tree/master/mrcnn/model.py

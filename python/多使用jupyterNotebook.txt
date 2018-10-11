@@ -1,0 +1,10 @@
+cmd下：
+
+jupyter notebook
+
+要注意：先import，先把所有的类库装载进来，否则notebook不会主动加载进来的
+
+编辑时，不会自动编译，尤其是新的对象————需要先运行，jupyter才会知道该名称，是什么类型的对象————才会提示方法
+
+
+比如df = pandas.read_csv(),不运行，他是不知道是dataframe的，所以也不会提示dataframe的api

@@ -1,0 +1,23 @@
+添加镜像源，是在maven的setting.xml中添加
+见：https://www.cnblogs.com/duking1991/p/6110192.html
+
+
+<mirrors>
+	<mirror>
+	
+	</mirror>
+</mirrors>
+
+
+
+这是maven全局的。
+
+
+
+
+另外，也可以在单个maven工程的pom文件下，添加
+
+<repositories>
+	<repository>
+	</repository>
+</repositories>

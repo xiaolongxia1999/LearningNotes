@@ -1,0 +1,9 @@
+https://blog.csdn.net/u014589856/article/details/76253530
+参照方法2：
+
+
+本质上，还是利用spark的 newHadoopRDD——即hadoop2.x，进行对hbase的连接。
+
+所以说，只要是hadoop支持的数据读写格式，spark也一定能以该方式支持。
+
+包括对hive,hbase等的集成

@@ -1,0 +1,7 @@
+https://blog.csdn.net/zhangzhengyi03539/article/details/50035265
+
+涉及到“随机梯度下降”————————原来“最小二乘”只是一种“损失函数”
+
+SVD分解的意义
+
+特征向量求解等

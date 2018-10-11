@@ -1,0 +1,1 @@
+https://alvinalexander.com/scala/how-to-generate-scala-documentation-scaladoc-command-examples

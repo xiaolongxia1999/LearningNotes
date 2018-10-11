@@ -1,0 +1,195 @@
+在LinearReggression类中，实际的训练过程是train
+
+linearRegression 的train是：LinearRegressionWithSGD.train()方法
+
+该模型的train方法里：实际上是调用了：new LinearRegressionWithSGD(stepSize, numIterations, 0.0, miniBatchFraction)
+      .run()
+
+该run方法实际调用：GeneralizedLinearAlgorithm.run()
+
+
+里面实际上是生成了各种变量（都是SGD，随机梯度下降里计算出来的参数）：
+
+#是否用“标准化，即无量纲”——使得梯度下降的速度更快，收敛速度更快
+val scaler = if (useFeatureScaling) {
+      new StandardScaler(withStd = true, withMean = false).fit(input.map(_.features))
+
+# data就是一个RDD[LabeldPoint(labelCol,FeatureCols)]  ,也就是训练集——————读取文本文件，按行获取的数据集[y,X]
+val data =
+      if (addIntercept) {
+        if (useFeatureScaling) {
+          input.map(lp => (lp.label, appendBias(scaler.transform(lp.features)))).cache()
+        } else {
+          input.map(lp => (lp.label, appendBias(lp.features))).cache()
+
+
+# 设置初始权重，方便后面的更新
+val initialWeightsWithIntercept = if (addIntercept && numOfLinearPredictor == 1) {
+      appendBias(initialWeights)
+
+#计算权重和截距项——————这里是用优化算法（实际选择的SGD，随机梯度下降法）进行计算——不断更新权重，使值最小——————最终得到“最终权重和截距项”——训练阶段完毕
+val weightsWithIntercept = optimizer.optimize(data, initialWeightsWithIntercept)
+
+
+这里optimizer，是定义的一个接口trait， 而其实际实现，是linearRegression类里的override val optimizer = new GradientDescent(gradient, updater)
+
+其实现的是GradientDescent.optimize方法：即
+ def optimize(data: RDD[(Double, Vector)], initialWeights: Vector): Vector = {
+    val (weights, _) = GradientDescent.runMiniBatchSGD(
+
+
+实际上跑的是：
+GradientDescent.runMiniBatchSGD方法，代码如下：
+
+ def runMiniBatchSGD(
+      data: RDD[(Double, Vector)],
+      gradient: Gradient,
+      updater: Updater,
+      stepSize: Double,
+      numIterations: Int,
+      regParam: Double,
+      miniBatchFraction: Double,
+      initialWeights: Vector,
+      convergenceTol: Double): (Vector, Array[Double]) = {
+
+    // convergenceTol should be set with non minibatch settings
+    if (miniBatchFraction < 1.0 && convergenceTol > 0.0) {
+      logWarning("Testing against a convergenceTol when using miniBatchFraction " +
+        "< 1.0 can be unstable because of the stochasticity in sampling.")
+    }
+
+    if (numIterations * miniBatchFraction < 1.0) {
+      logWarning("Not all examples will be used if numIterations * miniBatchFraction < 1.0: " +
+        s"numIterations=$numIterations and miniBatchFraction=$miniBatchFraction")
+    }
+
+    val stochasticLossHistory = new ArrayBuffer[Double](numIterations)
+    // Record previous weight and current one to calculate solution vector difference
+
+    var previousWeights: Option[Vector] = None
+    var currentWeights: Option[Vector] = None
+
+    val numExamples = data.count()
+
+    // if no data, return initial weights to avoid NaNs
+    if (numExamples == 0) {
+      logWarning("GradientDescent.runMiniBatchSGD returning initial weights, no data found")
+      return (initialWeights, stochasticLossHistory.toArray)
+    }
+
+    if (numExamples * miniBatchFraction < 1) {
+      logWarning("The miniBatchFraction is too small")
+    }
+
+    // Initialize weights as a column vector
+    var weights = Vectors.dense(initialWeights.toArray)
+    val n = weights.size
+
+    /**
+     * For the first iteration, the regVal will be initialized as sum of weight squares
+     * if it's L2 updater; for L1 updater, the same logic is followed.
+     */
+    var regVal = updater.compute(
+      weights, Vectors.zeros(weights.size), 0, 1, regParam)._2
+
+    var converged = false // indicates whether converged based on convergenceTol
+    var i = 1
+    while (!converged && i <= numIterations) {
+      val bcWeights = data.context.broadcast(weights)
+      // Sample a subset (fraction miniBatchFraction) of the total data
+      // compute and sum up the subgradients on this subset (this is one map-reduce)
+      val (gradientSum, lossSum, miniBatchSize) = data.sample(false, miniBatchFraction, 42 + i)
+        .treeAggregate((BDV.zeros[Double](n), 0.0, 0L))(
+          seqOp = (c, v) => {
+            // c: (grad, loss, count), v: (label, features)
+            val l = gradient.compute(v._2, v._1, bcWeights.value, Vectors.fromBreeze(c._1))
+            (c._1, c._2 + l, c._3 + 1)
+          },
+          combOp = (c1, c2) => {
+            // c: (grad, loss, count)
+            (c1._1 += c2._1, c1._2 + c2._2, c1._3 + c2._3)
+          })
+
+      if (miniBatchSize > 0) {
+        /**
+         * lossSum is computed using the weights from the previous iteration
+         * and regVal is the regularization value computed in the previous iteration as well.
+         */
+        stochasticLossHistory += lossSum / miniBatchSize + regVal
+        val update = updater.compute(
+          weights, Vectors.fromBreeze(gradientSum / miniBatchSize.toDouble),
+          stepSize, i, regParam)
+        weights = update._1
+        regVal = update._2
+
+        previousWeights = currentWeights
+        currentWeights = Some(weights)
+        if (previousWeights != None && currentWeights != None) {
+          converged = isConverged(previousWeights.get,
+            currentWeights.get, convergenceTol)
+        }
+      } else {
+        logWarning(s"Iteration ($i/$numIterations). The size of sampled batch is zero")
+      }
+      i += 1
+    }
+
+    logInfo("GradientDescent.runMiniBatchSGD finished. Last 10 stochastic losses %s".format(
+      stochasticLossHistory.takeRight(10).mkString(", ")))
+
+    (weights, stochasticLossHistory.toArray)
+
+  }
+
+
+上面的是核心代码：
+
+	这些核心代码里关键的是这几句：
+
+#计算regVal—————实际计算有3种“更新算子”实现：SimpleUpdater、L1Updater、SquaredL2Updater（默认应该是第1种，实际是哪一种，看参数是否设定）——————这里面封装的就是breeze库的计算方法————是真正的核心计算部分
+var regVal = updater.compute(
+      weights, Vectors.zeros(weights.size), 0, 1, regParam)._2
+
+#对于最大迭代次数类，while循环计算，知道最终满足停止迭代条件
+while (!converged && i <= numIterations) {
+
+	#对每一次迭代，对数据取样（rdd.sample）,并进行rdd.treeAggregate(向量) 操作——————就看rdd怎么操作了
+	val (gradientSum, lossSum, miniBatchSize) = data.sample(false, miniBatchFraction, 42 + i)
+        .treeAggregate((BDV.zeros[Double](n), 0.0, 0L))(
+          seqOp = (c, v) => {
+            // c: (grad, loss, count), v: (label, features)
+            val l = gradient.compute(v._2, v._1, bcWeights.value, Vectors.fromBreeze(c._1))
+            (c._1, c._2 + l, c._3 + 1)
+          },
+          combOp = (c1, c2) => {
+            // c: (grad, loss, count)
+            (c1._1 += c2._1, c1._2 + c2._2, c1._3 + c2._3)
+
+
+	#在该次迭代中，又进行更新操作————更新权重、regVal(前一次标准化后的变量X，随机取样得到）
+	stochasticLossHistory += lossSum / miniBatchSize + regVal
+        val update = updater.compute(
+          weights, Vectors.fromBreeze(gradientSum / miniBatchSize.toDouble),
+          stepSize, i, regParam)
+        weights = update._1
+        regVal = update._2
+
+
+
+
+另外，下面的操作是，用了rdd.treeAggregate操作（先分区用聚合func1，再对分区结果用聚合func2）——此处的两个聚合操作：
+	聚合func1: gradient.compute——Gradient类里的3种实现类的compute方法之一（此处应该是线性的算法）：
+		LogisticGradient、LeastSquaresGradient、HingeGradient
+
+	聚合func2: 2元元组，每个元组是一个tuple3,类似于如下操作：  （ (a1，b1,c1),(a2,b2,c1)）=> (a1+b1,a2+b2,a3+b3)
+val (gradientSum, lossSum, miniBatchSize) = data.sample(false, miniBatchFraction, 42 + i)
+        .treeAggregate((BDV.zeros[Double](n), 0.0, 0L))(
+          seqOp = (c, v) => {
+            // c: (grad, loss, count), v: (label, features)
+            val l = gradient.compute(v._2, v._1, bcWeights.value, Vectors.fromBreeze(c._1))
+            (c._1, c._2 + l, c._3 + 1)
+          },
+          combOp = (c1, c2) => {
+            // c: (grad, loss, count)
+            (c1._1 += c2._1, c1._2 + c2._2, c1._3 + c2._3)
+          })

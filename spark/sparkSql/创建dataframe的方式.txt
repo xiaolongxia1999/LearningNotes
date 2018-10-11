@@ -1,0 +1,4 @@
+可以看看DataFrame怎么构造
+
+
+一般是用： createDataframe()  ,这里的参数，可以使用多个Row， 也可以使用多个Seq（）

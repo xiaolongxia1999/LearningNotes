@@ -1,0 +1,6 @@
+执行spark的beeline时， 其实际上执行的是其jars里的hive相关包里的org.apache.hive.Beeline类
+
+而hive中的beeline命令，实际上执行的是bin/hive --service beeline命令
+
+本质上是执行的hive脚本，然后，应该是执行的hive中的lib里的jar包里的org.apache.hive.Beeline类
+

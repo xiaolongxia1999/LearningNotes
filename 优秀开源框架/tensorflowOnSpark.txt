@@ -1,0 +1,2 @@
+yahoo¿ªÔ´£º¡ª¡ªguidelineµØÖ·
+https://github.com/yahoo/TensorFlowOnSpark/wiki/GetStarted_YARN

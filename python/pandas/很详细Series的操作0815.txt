@@ -1,0 +1,3 @@
+https://blog.csdn.net/kingov/article/details/79513322
+
+其实就很像spark中的Column对象。

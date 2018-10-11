@@ -1,0 +1,16 @@
+https://www.cnblogs.com/jasonfreak/p/5448385.html
+
+全是实践
+
+sklearn.preprocessing 包里面包含主要的“特征工程”类库
+
+特征转换——特征提取——特征筛选
+
+
+另外，sklearn提供了一个“自定义转换器”函数：
+from sklearn.preprocessing import FunctionTransformer
+
+需要往FunctionTransformer中提供一个“自定义函数”或3方库函数（如numpy,pandas）
+
+
+这个就比较灵活了，类似于spark或python中的map

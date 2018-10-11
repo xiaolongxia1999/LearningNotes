@@ -1,0 +1,9 @@
+源码编译：
+
+两种选择：
+
+1。  ./build/mvn方式使用maven或sbt等项目打包和编译工具，将源码编译成class文件，并打成jar包，作为lib库。 甚至可以打包成Runnable的jar包
+
+2。 ./make-distribution.sh方式， 这相当于在编译的同时，生成“项目发布包”——最终会生成“预编译的接入hadoop等服务”的项目工程。
+
+

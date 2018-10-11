@@ -1,0 +1,14 @@
+用进制等比法：
+
+比如一个val a:Array = Array(1,2,5,7,7)
+
+那么用最简单的“10进制等比法”，形成5位数，即可得到Long类型的值
+
+生成val a:Long = 12577L
+
+其实就是：
+
+def arrayToLong(arr:Array[Int], binary:Int):Long = {
+
+	(0 to arr.length -1).toArray.map(index => arr(arr.length -1 - index) ** binary).reduce(_+_).toLong
+}

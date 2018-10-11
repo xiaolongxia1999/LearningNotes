@@ -1,0 +1,24 @@
+关键在于gradle.properties设置，如下，全部加入如下属性，（作用应该类似于pom.xml）
+https://blog.csdn.net/tianbo_zhang/article/details/79000946
+
+重点是调大jvm参数，Xmx越大越好。
+
+另外，使用gradlew 也就是gradle wrapper时， 默认是使用远程下载gradle后，再用gradle编译
+
+这里可以如下操作:https://blog.csdn.net/yzpbright/article/details/53492458
+将项目位置/gradle/wrapper/gradle-wrapper.properties修改：————主要是修改url，不用远程的，用本地已有的gradle或gradle.zip
+
+
+
+
+另外，修改gradle下载jar包依赖路径的仓库：https://blog.csdn.net/sanyuedexuanlv/article/details/78062595
+
+就是在zip文件中，向init.d目录下添加任意一个后缀为.gradle的文件，文件内容如下：
+allprojects {  
+    repositories {  
+         maven {  
+             name "aliyunmaven"  
+             url "http://maven.aliyun.com/nexus/content/groups/public/"  
+         }  
+    }  
+}  

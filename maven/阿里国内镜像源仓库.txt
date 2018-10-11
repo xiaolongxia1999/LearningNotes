@@ -1,0 +1,30 @@
+pom中在项目下添加如下即可。
+
+https://blog.csdn.net/u010770993/article/details/70312470
+
+   <repositories>
+        <repository>
+            <id>central</id>
+<!--      <url>http://repo1.maven.org/maven2</url>     去掉 -->
+           <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>apache.snapshots.repo</id>
+            <url>https://repository.apache.org/content/groups/snapshots</url>
+            <name>Apache Snapshots Repository</name>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>datanucleus</id>
+            <url>http://www.datanucleus.org/downloads/maven2</url>
+            <name>Datanucleus</name>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>

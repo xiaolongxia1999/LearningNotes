@@ -1,0 +1,15 @@
+https://blog.csdn.net/circle2015/article/details/53614596
+
+3种方法
+
+
+第3种方法，设置的几个文件，选一个即可
+
+spark-env.sh
+~/.bashrc
+~/.bash_profile
+$SPARK_HOME/bin/pyspark
+
+
+
+最新一次的更新，只需要在spark-env.sh添加一行，指定PYTHON_DRIVER_PATH=$ANACONDA_HOME/bin/ipython

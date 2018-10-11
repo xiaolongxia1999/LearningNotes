@@ -1,0 +1,21 @@
+https://endymecy.gitbooks.io/spark-ml-source-analysis/content/%E5%9F%BA%E6%9C%AC%E7%BB%9F%E8%AE%A1/kernel-density-estimation.html
+
+
+这用到gitBook成书，遍历一下本书！
+
+应该都在spark MLlib中
+
+涉及到：————————————
+	核密度估计
+	
+	各种统计
+
+	各种分类、回归、聚类
+
+	协同过滤（ALS）
+
+
+	降维
+
+	优化算法
+

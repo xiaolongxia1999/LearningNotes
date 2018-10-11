@@ -1,0 +1,5 @@
+1.用maven依赖
+
+2.用modules的add dependencies
+
+3.自建一个lib或jars，右键jars，点击add as Library即可（适用于maven上无法找到的）

@@ -1,0 +1,17 @@
+    val arrs = {0 to schemaNames1.length-1}.map( x => trainData1.map(y=>y.getString(x)).mkString(",") ) .toArray
+    var arrs1 =   {0 to schemaNames1.length-1}.map( x => schemaNames1(x)+","+arrs(x)).toArray
+    //scala上没错
+    arrs1.foreach(println)
+
+
+此处trainData1是 一个DataFrame.collect()，是Array[Row]
+
+这里用到了“闭包”——————两个集合的操作（1个集合是列的长度形成的： {0 to df.columns.length}   ; 另一个集合是Array[Row] ）
+
+
+另外一个操作：
+两个Array[String]  的每两个元素之间的操作。
+
+var arrs1 =   {0 to schemaNames1.length-1}.map( x => schemaNames1(x)+","+arrs(x)).toArray
+
+对于同一长度schemaName1.length   ，分别取schemaName1、arrs的第x个元素，用逗号连接。

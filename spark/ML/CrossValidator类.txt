@@ -1,0 +1,37 @@
+用于优化和模式识别
+
+和trainSplit类一样，一个用k-折交叉验证法，一个是将训练集和预测集切分
+
+
+2者都是为了发现最优参数组合。
+
+
+
+拟合完之后，需要取出estimator、evaluator这两个东西，才能获取到“最优参数”具体是多少
+
+2种方法：
+见https://www.huangyunkun.com/2016/11/10/spark-get-crossvalidator-best-model-params/
+
+方法1：
+
+crossvaliator类先把estimator和evaluator取出来
+
+分别再查看这两个类里的参数值
+
+对于用pipeline封装的类，还需要用pipeLineModel.stages取出对应的“算子”，再取出算子的属性
+
+方法2：
+用log4j把CrossValidator类，打印出来，日志级别修改为info
+
+
+
+
+
+另外，linearRegression在setLabelCol时， 默认为“label”这一列， 如果你转换后的列，不是这个，你要修改成这个名字。
+
+对于只运行一个linearRegression时，可以随意为label列取名字。
+
+但用crossValidator类时，必须为 setLabelCol("label")，否则报错：
+
+field “label” not exists.
+

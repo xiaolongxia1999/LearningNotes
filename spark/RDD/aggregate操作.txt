@@ -1,0 +1,36 @@
+https://blog.csdn.net/u011724402/article/details/79057450
+
+实现如下:
+def aggregate[U: ClassTag](zeroValue: U)(seqOp: (U, T) => U, combOp: (U, U) => U): U
+
+实际上是一个聚合操作——————（为什么不直接用reduce这类操作呢，有啥区别？）
+
+注意，reduce是按键进行聚合（自定义一个reduce逻辑），但是aggregate是按“分区”进行聚合（聚合函数可自定义），分区聚合后，再对每个"分区结果”进行另一个聚合操作
+
+也就是aggregate先“按分区聚合，seqOp定义的聚合方法”——再对分区结果“总体聚合，comOp定义的聚合方法”————————————涉及到两次聚合操作：两个聚合函数，可以相同，也可以不同。——————两个聚合操作是有顺序的。
+
+
+两个聚合函数需要自己定义————都是reduce那种操作，即  reduce(a.func(b))的操作
+
+如下：
+  def seqOp(s1:Int, s2:Int):Int = {
+    println("seq: "+s1+":"+s2)
+    s1 + s2
+  }
+
+  def combOp(c1: Int, c2: Int): Int = {
+    println("comb: "+c1+":"+c2)
+    c1 + c2
+  }
+
+  val rdd = sc.parallelize(1 to 12).repartition(6)
+  val res1 = rdd.aggregate(0)(seqOp, combOp)
+
+
+
+treeAggregate则是在aggregate操作的基础上， “总体聚合阶段”是先reduceByKey(将分区过多的结果按键合并，再收集到driver，这正是aggregate操作没有的）
+
+
+
+
+

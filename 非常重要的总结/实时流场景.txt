@@ -1,0 +1,4 @@
+hdfs———导入———>hbase（或es）——————>flume导入——————>kafka————————>spark streaming消费，计算————>jdbc写入mysql————————>echarts写入（可以加入个html模板）
+
+
+使用visio作流程或架构图。

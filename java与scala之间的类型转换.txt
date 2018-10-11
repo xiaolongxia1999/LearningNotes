@@ -1,0 +1,17 @@
+java和scala之间的基本数据类型，基本都可以互转——————当然scala自己定义了一些类，语法，scala应该能使用所有的java类。
+
+
+但有的时候，为什么总是发生scala类无法转成java类呢?
+
+
+原因： 你的scala在调用java类的时候，没有调用对。
+
+java和scala的基本数据类型的对应，如下，是可以互相转换的（其实就是scala引用了java的基本数据类型）：
+
+	
+
+
+比如： scala如何调用java的数组呢，具体的比如java的 Double[]呢？
+
+两种方式：
+	1. 使用java的

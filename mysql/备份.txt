@@ -1,0 +1,31 @@
+备份：
+https://www.cnblogs.com/SQL888/p/5751631.html
+
+简单的两种：
+cp方式，  复制/var/lib/mysql下你的“数据库目录”——mysql目录下的每个数据库实例都是一个目录
+
+
+mysqldump方式————使用mysqldump命令，指定数据库甚至里面的表，写入到 比如hive.sql这个文件下
+（恢复时，进入mysql，创建某数据库，并use之，然后source hive.sql即可，本质是执行sql脚本，如建表，插入数据等等操作）
+
+
+
+
+
+
+
+登入：
+ mysql -h172.16.3.24 -P 31184 -uroot -p9GNH05o2
+
+-h主机名， -P端口号， -u用户名，-p密码
+
+
+
+mysql数据迁移后，原hive表（hive元数据）不存在，需要如下操作：
+
+1.修改hive中的连接，4个（driveName，url,user,password）
+
+2.在新的mysql中，创建hive数据（create database命令）——再创建hive-site.xml中指定的user，password（create user命令）——将hive数据库操作权限赋予该user（grant命令）
+
+
+

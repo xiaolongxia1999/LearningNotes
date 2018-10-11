@@ -1,0 +1,14 @@
+case class student( id:Int,name:String)
+
+val rdd = lines.map(   
+		x => student( x(1).toString.toInt,x(2).toString )
+	  )
+
+val df = rdd.toDF()
+
+
+1.先定义case class
+
+2.用case class生成rdd   （case class相当于定义了schema）
+
+3.toDF , 即rdd转成DataFrame

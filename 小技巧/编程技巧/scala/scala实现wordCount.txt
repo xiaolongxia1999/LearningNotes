@@ -1,0 +1,14 @@
+scala中Array使用 groupBy 和 reduce实现 rdd的GroupByKey方法：
+
+
+val a = Array(5,3,5,6,7,8,3,5)
+
+a.map(x=	>(x,1)).groupBy(_._1)       这里得到一个Map[K, Array[K,V] ]
+	
+	.reduce( x => (x._1, x._2.length)   #x.2.size也可以
+
+最终得到一个Map, 形如 Map(5->3, 6->1 ....)
+
+Map.get(5)得到Some(3) 
+
+x match( case Some(a)=>a） 得到x的原类型

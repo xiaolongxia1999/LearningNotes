@@ -1,0 +1,29 @@
+他们都是这样的api：
+https://www.cnblogs.com/drawwindows/p/5762392.html
+该示例是：对分区内元素求{zeroValue,该区所有其他元素}这个集合的最小值，然后将最小值相加
+
+
+def aggregate[U: ClassTag](zeroValue: U)(seqOp: (U, T) => U, combOp: (U, U) => U): U
+
+def treeAggregate[U: ClassTag](zeroValue: U)(seqOp: (U, T) => U,combOp: (U, U) => U,depth: Int = 2): U
+
+
+aggregate在seqOp阶段，是从zeroValue开始的，且combOp也是要从zeroValue开始的
+
+意味着，3个分区求出3个最小值{1,3,3}，还要和combOp的初始值3相加，得到结果10
+
+而treeAggregate咋seqOp阶段相同，在combOp阶段，直接将所有分区计算结果，进行combOp操作
+
+而不考虑初始值zeroValue.
+
+也即最终结果是{1,3,3}中的1+3+3=7
+
+
+
+不过：从名字上看，zeroValue初始值应该是“零”值，此时，不会aggregate和treeAggregate函数，结果相同。
+
+
+注意：分区时无序的， 如果你的aggregate函数的seqOp和combOp操作与顺序有关，那你每次得到的结果是不一样的。
+
+像+/*这种算子，结果是固定的，其他的则跟分区顺序，分区是否随机等有关。
+

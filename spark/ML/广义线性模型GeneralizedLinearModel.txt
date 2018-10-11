@@ -1,0 +1,12 @@
+https://blog.csdn.net/shine19930820/article/details/50997645
+
+
+y = g(Xb）+ ξ
+
+
+g是一个联合函数（不是线性的）
+
+ξ也不一定是高斯分布， 一般是二项、泊松、指数分布。  ——————总之，是“指数家族”分布系列的，一般是自然分布
+
+
+不同于General Linear model和Linear Least regression（这二者，应该是指：扩展的OLS， 针对序列相关，异方差等问题）

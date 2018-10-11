@@ -1,0 +1,47 @@
+关键在pipeline的fit和transform方法
+
+fit是将new pipeline传递的参数，转换schema(transformSchema）
+
+而transform是将dataframe进行真正的转换——
+
+这里的transform和fit都只是接口，具体实现是在各个模型中实现的。
+
+pipeline在fit后得到一个Array[Transformer]
+
+利用Array的foldLeft（initial：Object）(func:Func) 表示对初始数据initial进行从左往右，执行相同的操作。
+
+在此处pipeline.transform操作，实际上是，对最初始的DataFrame，进行transformDF.transform(也就是func操作）操作。
+
+具体实现，每个Model有自己的实现。
+
+另外Transformer实际上继承自Evaluator[Model]
+
+继承关系：左边是子，右边是父
+PipelineModel[ (uid:String,stages:Array[Transformer])]——>Model[PipelineModel]——>
+	
+Transformer——>PipelineStage——>Params-->Identifiable
+
+线性回归的继承关系：
+
+LinearRegression（uid:String）——》Regressor——》Predictor[FeaturesType, Learner, M]
+
+——》Estimator[M]——》PipelineStage——》Params
+
+[Vector,LinearRegression,LinearRegressionModel]——》
+
+
+回归算子构造：特征类型，算子，拟合后回归模型M[[FeaturesType, M]]
+Regressor[FeaturesType,
+	Learner <: Regressor[FeaturesType, Learner, M],
+    	M <: RegressionModel[FeaturesType, M]]]
+
+
+
+
+
+
+
+
+周志华《机器学习》
+
+Transformer/Evaluator的实现——（LR）

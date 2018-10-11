@@ -1,0 +1,23 @@
+在spark中有很多子RDD，都继承自核心RDD，比如：
+
+org.apache.spark.rdd中，就有很多rdd
+
+例如:
+	JdbcRDD——————专用于从JDBC（关系数据库中）驱动，读取数据
+
+	HadoopRDD/newHaddopRDD————专用于支持从hdfs中或hdfs所支持的输入格式的数据源，即MapReduce的那一套输入输出
+
+	SequenceFileRDD
+
+上述的RDD类，只要你在构造这些RDD时，按规定的参数传入，就能连接对应的软件。
+
+
+还有spark官方开发，但不在核心模块里的kafka,flume,kenesis的集成包
+
+
+还有es针对spark集成的。
+
+
+
+
+像hive/hbase以及其他hadoop系列的组件，底层都自hadoop，所以集成到spark中，就明显要用hadoop所支持的文件输入、输出格式。————继承RecordReader、RecordWriter类，分片/覆写。

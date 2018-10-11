@@ -1,0 +1,14 @@
+见：
+http://www.cnblogs.com/youaremylife/p/9303778.html
+同时参看：
+
+
+我再tj007上搭建的网页地址：
+http://172.16.41.26/simple/
+里面就一个index.html
+
+后来删除了
+
+访问目录：
+http://172.16.41.26/simple/dyv/
+这里面其实就是：

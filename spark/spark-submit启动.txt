@@ -1,0 +1,30 @@
+spark-submit启动：
+exec "${SPARK_HOME}"/bin/spark-class org.apache.spark.deploy.SparkSubmit "$@"
+
+即允许spark-class脚本， 该脚本接收一个参数，为org.apache.spark.deploy.SparkSubmit类
+
+
+接着spark-class脚本：
+
+定义了一堆：$SPARK_HOME及其CLASSPATH目录，找到$JAVA_HOME的bin/java位置，
+
+实际启动——————启动jvm的命令：
+
+先定义了build_command函数：
+build_command() {
+  "$RUNNER" -Xmx128m -cp "$LAUNCH_CLASSPATH" org.apache.spark.launcher.Main "$@"
+  printf "%d\0" $?
+}
+
+这里$RUNNER变量，其实就是$JAVA_HOME/bin/java ，这就是命令行启动JVM：
+
+JVM接收参数：org.apache.spark.launcher.Main， 即java允许该类里的程序。（这个过程包含了jvm的启动，如使用javac编译成class文件，再去读取文件）
+
+具体Main里的逻辑，就要具体看了。 反正就是进入SPARK里的类了，JVM执行。
+
+
+
+然后JVM又是怎么启动的呢？
+其实际启动入口是：$JAVA_HOME/jdk/src/share/bin/main.c
+具体过程比较复杂，见：
+https://blog.csdn.net/qiangweiloveforever/article/details/51810294

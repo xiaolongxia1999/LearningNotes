@@ -1,0 +1,8 @@
+http://www.aboutyun.com/thread-6789-1-1.html
+
+
+用cloudera————一站式安装，用bin文件，它自己下
+
+用tar包————下载tarball，手动配置集群信息
+
+用yum或rpm安装。

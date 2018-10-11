@@ -1,0 +1,10 @@
+import java.util.Random
+
+val arr = Array(0,1,1,1,1,1,2,2,2,3)
+
+arr(new Random().nextInt(arr.length-1))
+
+
+val arr2 = new Array(1000)
+
+val tt=arr2.map(x=>arr2 = new Random().nextInt(arr.length-1)).toArray

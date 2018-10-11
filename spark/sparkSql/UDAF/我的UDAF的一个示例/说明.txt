@@ -1,0 +1,56 @@
+MyAverage继承自: org.apache.spark.sql.expressions.UserDefinedAggrehationFunction
+
+
+注意：
+	这里面的“加总”相当于对“一列”（应该也可以为一行）作加总，如求平均
+
+	而不是分组加总
+
+想要将UDAF应用于分组汇总，需要使用GroupBy.agg(exprs: Column*)方法
+
+GroupBy除自身提供了一些mean,min,max等方法， 还提供了agg这个接口，
+
+	你可以提供表达式exprs(一个字符串，如同sql语法）
+
+	也可以直接使用调用UDAF，
+
+	调用方法如下:
+val obj = new MyAverage
+val df2 = df.groupBy("name1").agg(obj.apply(col("salary1")))
+
+对df按“name1”分组， 然后求汇总——汇总逻辑为:对“salary1”这列，应用MyAverage.apply()方法————该方法接收Column对象，转成新的Column
+
+
+
+df如下：
++-------+-------+
+|  name1|salary1|
++-------+-------+
+|Michael|   3000|
+|   Andy|   4500|
+|   Andy|   3500|
+|  Berta|   4000|
++-------+-------+
+
+
+
+udaf————相当于reduce
+group by 之后的udaf——————相当于reduceByKey
+
+
+
+不分组，只对某一列应用udaf,调用如下：
+val obj = new MyAverage      //先实例化
+val df1 = df.select(obj.apply(col("salary1")))
+
+
+
+
+
+-------------------------
+-------------------------
+另一个方法：
+
+就是createTempView
+
+然后执行spark.sql(sql)，这个更方便，更简单

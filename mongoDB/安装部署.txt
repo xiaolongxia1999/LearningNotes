@@ -1,0 +1,2 @@
+windowsÏÂ£º
+http://www.runoob.com/mongodb/mongodb-window-install.html

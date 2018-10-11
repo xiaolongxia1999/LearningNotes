@@ -1,0 +1,9 @@
+https://www.cnblogs.com/jinjiyese153/p/6796668.html
+
+上面是新提交的代码：（建立新仓库）
+
+
+非第一次上传代码，需要像使用Git命令一样，遵循vcs的git下面：Add->Commit->Push的方式。
+见：https://www.cnblogs.com/520playboy/p/6697127.html
+
+

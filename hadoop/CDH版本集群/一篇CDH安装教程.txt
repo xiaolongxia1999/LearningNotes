@@ -1,0 +1,8 @@
+https://blog.csdn.net/ddyyll988/article/details/59057584
+
+貌似hadoop的组件都已经在ClouderaManager的安装包里了
+
+
+
+另一篇：
+https://segmentfault.com/a/1190000012540680

@@ -1,0 +1,31 @@
+https://blog.csdn.net/wjmishuai/article/details/71191945
+该博客详细提供了：矩阵分解的方法
+
+
+协同过滤的两种方式：
+协同过滤的两个主要领域是邻居方法（neighborhood methods, 如userKNN、 itemKNN、 slopOne等）和隐式因子模型(latent factor models， 也就是矩阵分解模型（matrix factorization），如SVD、SVD++等)，本文是对SVD++算法的总结
+
+
+简言之：
+一种是，基于KNN的
+
+另一种是，基于矩阵分解的
+见：https://blog.csdn.net/buptfanrq/article/details/72354108
+
+spark的Graphx中，有SVD++实现，能实现稀疏的SVD分解
+
+
+
+所以这两种都能用于“推荐系统”
+
+
+
+SVD++的主要过程：
+
+1.输入为: User-Item矩阵 （M * N）列
+
+2.分解为两个矩阵 User-偏好（M*K）和偏好-Item
+
+3.分解后，根据“评分预测公式”， 最小化损失——还涉及到正则项
+
+4.得到最终的参数（即预测公式中的参数）

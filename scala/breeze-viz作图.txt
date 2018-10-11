@@ -1,0 +1,8 @@
+一篇博客的介绍：
+https://blog.csdn.net/tanglizhe1105/article/details/50537949
+
+官网简介：
+
+
+git源码：
+https://github.com/scalanlp/breeze/tree/master/viz/src/main/scala/breeze/plot

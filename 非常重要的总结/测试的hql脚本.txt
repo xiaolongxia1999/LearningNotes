@@ -1,0 +1,210 @@
+思路：
+
+筛选指定的传感器：有个筛选表，等连接（注意，小表在前，筛选出相应的传感器）——————不需要使用where了
+
+分析维度：起码是2个维度————————时间*传感器——————————所以avg这类加总函数，group by时必然是2个维度及以上的。
+
+select time,avg(value) from power_plant where time=='2017-12-26 14:12:45' and chinesename!='' group by time;
+建表：create external table使用combine TextInputFormat(读取目录下的多个文件，见网上)。
+导入数据：
+
+注：标记@test的，都是测试用hql，不在最终hql语句里
+
+#建表之前，合并输入文件，形成单表————亲测有效（实际上就是hadoop的一种文件输入方式）
+set hive.input.format=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
+
+#可选项：文件map结果合并、reduce结果合并（输出合并）————https://blog.csdn.net/opensure/article/details/46545445
+#另一篇关于合并的文章：输入合并、中间结果和结果输出合并、文件压缩————————https://blog.csdn.net/djd1234567/article/details/51581201
+
+#设置从目录读取方式：
+
+#创建表，日期就用字符串，后面使用split函数————————————https://blog.csdn.net/lxpbs8851/article/details/18712407
+create external table if not exists power_plant(machine string,englishname string,chinesename string,value double,time string) row format delimited fields terminated by ',' stored as textfile
+
+
+
+
+load data local inpath '/home/biop/data/cl/hiveData/000000_1_copy_1' overwrite into table power_plant;
+
+#select machine,english,chinesename,avg(value) from power_plant;
+#@test
+#求平均值，以chinesename分组————————实际应以时间分组
+select chinesename,avg(value) from power_plant group by chinesename ;
+
+#@test
+#时间字符串分割成“日期 小时“形式，可以直接分组求平均了
+select machine,englishname,chinesename,value,split(time,':')[0] as t1 from power_plant limit 30;
+
+#完整的求平均命令
+select avg(value),table1.t1 as time_split from (select machine,englishname,chinesename,value,split(time,':')[0] as t1 from power_plant) table1 group by table1.t1;
+
+#求出来的avg值貌似不太对，很大，近10W
+#字符串拼接函数concat：https://blog.csdn.net/muzieryueniao/article/details/77053307
+select avg(value),table1.t1 as time_split from (select machine,englishname,chinesename,value,concat(split(time,':')[0],split(time,':')[1]) as t1 from power_plant) table1 group by table1.t1;
+
+#@test按分钟求均值——————貌似avg函数计算有问题：(不知道是浮点型数据计算导致的问题还是什么原因，总之很大)
+select table1.t1 as time_split,table1.chinesename as chinesename,avg(value) as avg_value, from (select machine,englishname,chinesename,value,concat(split(time,':')[0],split(time,':')[1]) as t1 from power_plant) table1 group by table1.t1,table1.chinesename;
+
+
+
+#（时间不用解析，直接字符串即可，由时间字符串split成“日期+小时”即可，然后分组求平均——————其中t1是由time经过split后生成的列
+
+#伪代码
+select time.split(":")[0] as t1 from power_plant;
+#根据时间分组
+select avg(value) ,t1 from power_plant group by t1;
+
+
+#hive查询数据到本地，下面为示例：
+bin/hive -e "select * from test" >> res.csv 
+
+
+
+
+Y0PGB41AA001-CMD.UNIT1@NET1,Y0PGB41AA001-CMD,,1,2017-09-09 11:57:46
+
+
+
+
+
+
+
+
+
+
+
+
+*要记住，group by 哪一列，select里面一般就只能选该列，不能选其他列。如果要选其他列，要group by 该列+其他列。（也就是多维分组）
+
+
+
+
+
+整理了下，使用hive的3步：
+
+1、创建表
+2、导入数据
+3、执行hive脚本(hive cli或hive -e)
+
+
+
+
+
+hql脚本：
+#设置合并输入————参考：https://blog.csdn.net/opensure/article/details/46545445
+set hive.input.format=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
+
+#设置合并输出，map，reduce文件数
+set mapred.max.split.size=256000000;  #每个Map最大输入大小
+set mapred.min.split.size.per.node=100000000; #一个节点上split的至少的大小 
+set mapred.min.split.size.per.rack=100000000; #一个交换机下split的至少的大小
+set hive.input.format=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;  #执行Map前进行小文件
+
+set hive.merge.mapfiles = true #在Map-only的任务结束时合并小文件
+set hive.merge.mapredfiles = true #在Map-Reduce的任务结束时合并小文件
+set hive.merge.size.per.task = 256*1000*1000 #合并文件的大小
+set hive.merge.smallfiles.avgsize=16000000 #当输出文件的平均大小小于该值时，启动一个独立的map-reduce任务进行文件merge
+
+#建表、导数——————注意，建立外部表（只是关联，drop时不会删除)，建立外部表指定location；
+create external table if not exists power_plant_all(machine string,englishname string,chinesename string,value double,time string) row format delimited fields terminated by ',' location '/DataOfPowerPlantOrigin/hive/warehouse';
+
+#不要使用overwrite关键字，不然原文件会被删除————见https://zhidao.baidu.com/question/1050036830483732499.html
+#目前电厂数据实际存放地址为：/DataOfPowerPlantOrigin/hive/warehouse
+load data inpath '/DataOfPowerPlantOrigin/power_plant_all/*'  into table power_plant_all;
+
+
+
+
+还要考虑去重，在avg中使用distinct.
+
+
+
+
+
+
+#跑前设置
+set hive.input.format=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
+set mapred.max.split.size=256000000; 
+set mapred.min.split.size.per.node=100000000; 
+set mapred.min.split.size.per.rack=100000000;
+set hive.merge.mapfiles = true;
+set hive.merge.mapredfiles = true; 
+set hive.merge.size.per.task = 256*1000*1000; 
+set hive.merge.smallfiles.avgsize=16000000 ;
+
+
+#原配置才1G：http://172.16.32.139:8088/conf
+set mapreduce.map.memory.mb=4096;
+set mapreduce.reduce.memory.mb=8192;
+
+#上面的2个memory很重要，设大一点。不然shuffle过程，reduce获取不到结果
+#全局配置在mapred-site.xml中设置
+<property>
+<name>mapreduce.map.memory.mb</name>
+<value>4096</value>
+</property>
+<property>
+<name>mapreduce.reduce.memory.mb</name>
+<value>8192</value>
+</property>
+
+
+#30g数据
+create external table if not exists power_plant30g(machine string,englishname string,chinesename string,value double,time string) row format delimited fields terminated by ',' location '/DataOfPowerPlantOrigin/hive/power_plant30g';
+load data inpath '/DataOfPowerPlantOrigin/hive/warehouse/000003*'  into table power_plant30g;
+create external table if not exists pp_result30g (time string,machine string,chinesename string,value double) row format delimited fields terminated by '\t' stored as textfile;
+hive -e "insert overwrite table pp_result30g select table1.t1 as time_split,table1.machine,table1.chinesename as sensor_id,avg(value) as avg_value from (select machine,englishname,chinesename,value,split(time,':')[0] as t1 from power_plant30g) table1 group by table1.t1,table1.machine ,table1.chinesename ;" &
+
+
+#300g数据——后台
+create external table if not exists power_plant300g(machine string,englishname string,chinesename string,value double,time string) row format delimited fields terminated by ',' location '/DataOfPowerPlantOrigin/hive/power_plant300g';
+load data inpath '/DataOfPowerPlantOrigin/hive/warehouse/00003*'  into table power_plant300g;
+create external table if not exists pp_result300g (time string,machine string,chinesename string,value double) row format delimited fields terminated by '\t' stored as textfile;
+nohup hive -e "insert overwrite table pp_result300g select table1.t1 as time_split,table1.machine,table1.chinesename as sensor_id,avg(value) as avg_value from (select machine,englishname,chinesename,value,split(time,':')[0] as t1 from power_plant300g) table1 group by table1.t1,table1.machine ,table1.chinesename ;" &
+
+
+0604备份
+#备份pp_result300g
+备份恢复：create external table if not exists pp_result300g(time string,machine string,chinesename string ,avg_value double) row format delimited fields terminated by ',' stored as textfile;
+load data inpath '/user/hive/warehouse/pp_result300g/*'  into table pp_result300g;
+#备份pp_result3t
+create external table if not exists pp_result3t(time string,machine string,chinesename string ,avg_value double) row format delimited fields terminated by ',' stored as textfile;
+load data inpath '/user/hive/warehouse/pp_result3t/*'  into table pp_result3t;
+#备份pp_result30g
+create external table if not exists pp_result30g(time string,machine string,chinesename string ,avg_value double) row format delimited fields terminated by ',' stored as textfile;
+load data inpath '/user/hive/warehouse/pp_result30g/*'  into table pp_result30g;
+#备份test_ts1
+create external table if not exists test_ts1(machine_id string,group string,chinesename string ,value double,time string) row format delimited fields terminated by ',' stored as textfile;
+load data inpath '/user/hive/warehouse/test_ts1/*'  into table test_ts1;
+
+
+#3.5T数据——后台
+create external table if not exists power_plant3t(machine string,englishname string,chinesename string,value double,time string) row format delimited fields terminated by ',' location '/DataOfPowerPlantOrigin/hive/power_plant3t';
+load data inpath '/DataOfPowerPlantOrigin/hive/warehouse/*'  into table power_plant3t;
+create external table if not exists pp_result3t (time string,machine string,chinesename string,value double) row format delimited fields terminated by '\t' stored as textfile;
+nohup hive -e "insert overwrite table pp_result3t select table1.t1 as time_split,table1.machine,table1.chinesename as sensor_id,avg(value) as avg_value from (select machine,englishname,chinesename,value,split(time,':')[0] as t1 from power_plant3t) table1 group by table1.t1,table1.machine ,table1.chinesename ;" &
+
+
+
+
+#使用orc格式存储数据，测试速度————https://www.cnblogs.com/ITtangtang/p/7677912.html
+SET hive.default.fileformat=Orc
+create external table if not exists power_plant30gOrc(machine string,englishname string,chinesename string,value double,time string) row format delimited fields terminated by ',' stored as orc;
+load data inpath '/DataOfPowerPlantOrigin/hive/power_plant3t/000003*'  into table power_plant30gOrc;
+create external table if not exists pp_result30g (time string,machine string,chinesename string,value double) row format delimited fields terminated by '\t' stored as textfile;
+select table1.t1 as time_split,table1.machine,table1.chinesename as sensor_id,avg(value) as avg_value from (select machine,englishname,chinesename,value,split(time,':')[0] as t1 from power_plant30gOrc) table1 group by table1.t1,table1.machine ,table1.chinesename limit 20;
+
+
+
+#一个hive分组求topN的操作，此处是top2:
+select * from (select machine,englishname,chinesename,RANK() OVER(PARTITION BY machine order by value desc) as value_rank from power_plant30g )e where value_rank < 3;
+
+
+
+
+高安屯——部分数据求平均，使用test_ts1;
+create external table if not exists pp_avgByTenMin(machine string,value double,time string) row format delimited fields terminated by ',' stored as textfile;
+
+insert overwrite table pp_avgByTenMin 
+select machine,avg(value),substr(time,1,15) from test_ts 
+group by machine,substr(time,1,15);

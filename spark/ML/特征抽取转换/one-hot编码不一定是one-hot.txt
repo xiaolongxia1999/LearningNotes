@@ -1,0 +1,7 @@
+One-HotEncoder有3个参数，除输入输出列，还有个dropLast变量（默认为true，取值布尔）
+
+默认情况下，得到的是dummy Variable，哑变量————专用于回归，否则发生“虚拟变量陷阱”
+
+如果用于分类，需要将dropLast设置为false，以变成真正的“One-hot热编码”——
+
+这样可以用于计算“举例”

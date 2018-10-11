@@ -1,0 +1,15 @@
+https://blog.csdn.net/rlnlo2pnefx9c/article/details/80972447
+
+
+1.一种是UDAF抽象类
+
+2.另一种是聚合函数的基类Aggregator
+
+均位于： org.apache.spark.sql.expressions包类
+
+两种函数均可以自定义聚合，但有差别
+
+
+貌似UDAF更抽象
+
+而Aggregator更适合于DataFrame

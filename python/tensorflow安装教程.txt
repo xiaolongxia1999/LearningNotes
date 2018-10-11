@@ -1,0 +1,22 @@
+1.用pip是最简单的：
+
+pip install tensorflow
+即可
+
+前提是：linux下安装anaconda3.4.2（自带python3.5.2）
+
+
+
+2.如果集群服务器无法连接外网，如果有一台机器安装好了tensorflow
+
+
+则只需要将当前节点的ANACONDA_HOME/lib/python3.5/site-packages/下的tensorflow库依赖的如下几个包，拷贝到ANACONDA_HOME/lib/python3.5/site-packages下即可：
+
+tensorboard
+tensorflow
+tensorflow-1.4.1.dist-info
+tensorflow_tensorboard-0.4.0rc3.dist-info
+google			（这个包也要包括）
+
+
+tensorflow依赖的几个包基本在这里面了。（其他的依赖包anaconda应该已经包括）

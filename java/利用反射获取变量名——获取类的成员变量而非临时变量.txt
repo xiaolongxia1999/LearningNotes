@@ -1,0 +1,11 @@
+https://www.jb51.net/article/101652.htm
+
+主要是
+
+Class clazz = Class.forName("全限定名")
+
+Fields[] fields = class.getFields()
+
+for(i:fields){
+	name = i.getName()
+}

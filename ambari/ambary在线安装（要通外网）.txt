@@ -1,0 +1,9 @@
+https://blog.csdn.net/youzhouliu/article/details/66973596?locationNum=15&fps=1
+
+
+
+但是启动ambari后一直处于loading状态，查到如下：
+http://www.mamicode.com/info-detail-1522617.html
+
+
+要修改ambari的1项配置，就是逻辑核数

@@ -1,0 +1,21 @@
+使用ssh-copy-id的方法：
+见：
+https://jingyan.baidu.com/article/c275f6ba08267ae33c756758.html
+
+这种方式的话，下次ssh连接时，需要指定用户名@hostname
+
+
+比如biop1和tuijian@tj006,tuijian@tj007无秘钥通信
+
+由于ssh是用户级别的通信，而不是点对点的，所以应该如下：
+
+ssh tuijian@tj006
+
+
+在搭建集群中的ssh，为什么不用使用用户名？
+
+在biop@biop1下，执行：ssh tj006
+
+实际上，是执行的： ssh biop@tj006
+
+即两个用户名相同。
